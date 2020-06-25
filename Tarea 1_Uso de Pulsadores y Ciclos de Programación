@@ -1,0 +1,69 @@
+//CÓDIGO 1: Manejo de ciclos de programación con puertos entrada-salida
+// Objetivo: Encender y apagar leds en dependencia con pulsadores relación a ciclos de programación.
+#define boton1 7 //uso de #define para entrada digital del pin 7
+#define boton2 6 //uso de #define para entrada digital del pin 6
+const int leds [6]={8,9,10,11,12,13}; // declaracion de un vector con los pines a usar
+int i=0; //contador del ciclo for
+int j=0; //variable con inicio en 0
+int bin=0;//variable con inicio en 0
+int x=0;//Contador del segundo ciclo for
+int y=0;//Contador del tercer ciclo for
+void setup() {
+//configuración de pines como salida
+for(;i<6;i++){ // vector que contiene a los pines de entrada 
+    pinMode(leds[i],OUTPUT);
+  }
+i=0;  
+pinMode(boton1,INPUT); // entrada digital del pin 7
+pinMode(boton2,INPUT); // entrada digital del pin 6
+}
+void loop() {
+ while(digitalRead(boton1)==HIGH){ //Condicion que indica al boton 1 encendido
+  for(x=0;x<7;x++){
+    digitalWrite(leds[0],HIGH);//Poner en estado alto a 5v la posicion 0
+    digitalWrite(leds[1],HIGH);//Poner en estado alto a 5v la posicion 1
+    digitalWrite(leds[2],HIGH); //Poner en estado alto a 5v la posicion 2
+    digitalWrite(leds[3],HIGH); //Poner en estado alto a 5v la posicion 3
+    digitalWrite(leds[4],HIGH); //Poner en estado alto a 5v la posicion 4
+    digitalWrite(leds[5],HIGH);//Poner en estado alto a 5v la posicion 5
+    delay(500); // Tiempo de detenerse el programa
+    digitalWrite(leds[0],LOW);//Poner 0v en la posicion 0
+    digitalWrite(leds[1],LOW);//Poner 0v en la posicion 1
+    digitalWrite(leds[2],LOW); //Poner 0v en la posicion 2
+    digitalWrite(leds[3],LOW); //Poner 0v en la posicion 3
+    digitalWrite(leds[4],LOW); //Poner 0v en la posicion 4
+    digitalWrite(leds[5],LOW);//Poner 0v en la posicion 5
+    delay(500);// Tiempo de detenerse el programa
+  } 
+  digitalWrite(leds[0],HIGH); //Poner 5v en la posicion 0
+  digitalWrite(leds[1],HIGH);//Poner 5v en la posicion 1
+  digitalWrite(leds[2],HIGH); //Poner 5v en la posicion 2
+  digitalWrite(leds[3],HIGH); //Poner 5v en la posicion 3
+  digitalWrite(leds[4],HIGH); //Poner 5v en la posicion 4
+  digitalWrite(leds[5],HIGH); //Poner 5v en la posicion 5
+ }
+ while(digitalRead(boton2)==HIGH){
+  for(y=0;y<10;y++){    //Ciclo de repeticion 10 veces la instruccion
+    digitalWrite(leds[0],HIGH); //Poner 5v en la posicion 0
+    digitalWrite(leds[5],HIGH); //Poner 5v en la posicion 5
+    digitalWrite(leds[1],LOW); //Poner 5v en la posicion 1
+    digitalWrite(leds[4],LOW); //Poner 5v en la posicion 4
+    digitalWrite(leds[2],LOW); //Poner 5v en la posicion 2
+    digitalWrite(leds[3],LOW); //Poner 5v en la posicion 3
+    delay(500);    //detener el microcontrolador mediosegundo
+    digitalWrite(leds[1],HIGH);//Poner 5v en la posicion 1
+    digitalWrite(leds[4],HIGH); //Poner 5v en la posicion 4
+    digitalWrite(leds[0],LOW); 
+    digitalWrite(leds[5],LOW);
+    delay(500); //detener el microcontrolador mediosegundo
+    digitalWrite(leds[2],HIGH); //Poner 5v en la posicion 5
+    digitalWrite(leds[3],HIGH); //Poner 5v en la posicion 5
+    digitalWrite(leds[1],LOW); //Poner 0v en la posicion 1
+    digitalWrite(leds[4],LOW); //Poner 0v en la posicion 4
+    delay(500);//detener el microcontrolador mediosegundo
+    digitalWrite(leds[2],LOW); //Poner 0v en la posicion 2
+    digitalWrite(leds[3],LOW);//Poner 0v en la posicion 3
+    delay(500);//detener el microcontrolador mediosegundo
+  }
+}
+}
