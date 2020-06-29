@@ -17,7 +17,7 @@ void loop(){
       lcd.print("Personas en Bus");
       lcd.setCursor(0,1);
       lcd.print(temp);
-      delay(100);
+      delay(500);
   }
   else if(digitalRead(salida)==HIGH)
 {
