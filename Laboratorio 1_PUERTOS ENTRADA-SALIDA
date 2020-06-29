@@ -1,0 +1,39 @@
+#include<LiquidCrystal.h>
+const int rs=12, en=3, d4=4, d5=5, d6=6, d7=7 ;
+const int entrada=8,salida=9;
+int temp=0;
+LiquidCrystal lcd(rs,en,d4,d5,d6,d7);
+void setup() { 
+lcd.begin(16,2);
+pinMode(entrada,INPUT);
+pinMode(salida,INPUT);
+lcd.print("Personas en Bus");
+}
+void loop(){ 
+  if(digitalRead(entrada)==HIGH)
+  { 
+      lcd.setCursor(0,0);
+      temp=temp+1;
+      lcd.print("Personas en Bus");
+      lcd.setCursor(0,1);
+      lcd.print(temp);
+      delay(100);
+  }
+  else if(digitalRead(salida)==HIGH)
+{
+   lcd.setCursor(0,0);
+   temp=temp-1;
+   lcd.print("Personas en Bus");
+   lcd.setCursor(0,1);
+   lcd.print(temp);
+   delay(500);
+}
+while(temp==30){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Capacidad Maxima");
+  lcd.setCursor(0,1);
+  lcd.print(temp);
+  delay(500);
+}
+  }
