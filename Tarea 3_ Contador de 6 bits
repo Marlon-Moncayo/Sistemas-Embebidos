@@ -1,22 +1,22 @@
 #define boton 7
-const int leds[]={13,12,11,10,9,8};
+const int leds[]={13,12,11,10,9,8};// declaracion del vector que contiene los puertos de salida
 int i=0;
 int tiempoAntirrebote = 10; //Una centecima de segundo para asegurarnos de que se estabilice la señal
-int contador = 0;
+int contador = -1;//inicializacion del contador
 int estadoBoton;
 int estadoBotonAnterior;
 void setup() {
 for (i = 0; i < 6; i++) {
-  pinMode(leds[i], OUTPUT);
+  pinMode(leds[i], OUTPUT);//declaracion de los pines de salida
 }
 
-pinMode(boton,INPUT);
+pinMode(boton,INPUT);//declaracion de el pin de entrada
 
 }
 
 void loop() {
   estadoBoton = digitalRead(boton); 
-  if(estadoBoton != estadoBotonAnterior){
+  if(estadoBoton != estadoBotonAnterior){// comparacion de los estados del boton para determinar si esta en alto o en bajo
     if(antirebote(boton)){
       contador++;
       binario(contador);
@@ -28,9 +28,9 @@ void binario(int x){           //función binario
     for (i = 0; i < 6; i++){
       digitalWrite(leds[i], bitRead(x,i));
     if (bitRead(x,i) == 1){
-      digitalWrite(leds[i], HIGH);
+      digitalWrite(leds[i], HIGH);// envia 5v a todos los pines de salida
     }else{
-      digitalWrite(leds[i], LOW);
+      digitalWrite(leds[i], LOW);// envia 0v a todos los pines de salida
     }
     }
 }
@@ -40,14 +40,15 @@ boolean antirebote (int pin){
   int estadoAnterior;
 
   do{
-    estado = digitalRead(pin);
+    estado = digitalRead(pin);//lectura del estado del pin antirebote
     if(estado != estadoAnterior){
       tiempo = 0;
       estadoAnterior = estado;
     }else{
-      tiempo++;
+      tiempo++;// Contador
     }
   }while(tiempo < tiempoAntirrebote);
   return estado;
   
 }
+
