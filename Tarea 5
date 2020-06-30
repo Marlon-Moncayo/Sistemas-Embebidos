@@ -1,0 +1,31 @@
+#include <LiquidCrystal.h> // Entre los símbolos <> buscará en la carpeta de librerías configurada 
+LiquidCrystal lcd(13, 12, 11, 10, 9, 8);// indicando los pins de la interfaz 
+String texto_fila = "ARDUINO";// Textos
+void setup() {
+  // Configuración monitor serie
+  Serial.begin(9600);
+ 
+  // Configuramos las filas y las columnas del LCD en este caso 16 columnas y 2 filas
+  lcd.begin(16, 2);
+} 
+void loop() {
+  int tam_texto=texto_fila.length();// Obtenemos el tamaño del texto
+ 
+  // Mostramos entrada texto por la izquierda
+  for(int i=tam_texto; i>0 ; i--)
+  {
+    String texto = texto_fila.substring(i-1);   
+    lcd.clear();// Limpiamos pantalla
+    lcd.setCursor(0, 0);//Situamos el cursor
+    lcd.print(texto);// Escribimos el texto
+    delay(300);// Esperamos
+  }
+ 
+  
+  for(int i=1; i<=16;i++){// Desplazamos el texto hacia la derecha
+    lcd.clear();// Limpiamos pantalla
+    lcd.setCursor(i, 0); //Situamos el cursor
+    lcd.print(texto_fila);// Escribimos el texto
+    delay(300);// Tiempo de espera
+  }
+}
