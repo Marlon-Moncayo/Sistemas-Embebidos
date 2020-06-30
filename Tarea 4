@@ -5,7 +5,7 @@ const int A=8;// bit menos significativo
 const int decenas = 13;
 const int unidades = 12;
 const int btn=7;
-int cont=0;
+int conta=0;
 int dec;
 int uni; 
 void setup() {
@@ -22,22 +22,19 @@ void setup() {
 void loop() {
 if(digitalRead(btn)==LOW){
   delay(100);
-for(byte n=1;n<=100;n++){
+for(byte conta=1;conta<=100;conta++){
   bool primo = true;
-  for(byte i=2; i<n;i++){
-    if(n%i==0){
+  for(byte j=2; j<conta;j++){
+    if(conta%j==0){
       primo=false;
       
     }
   }
   if(primo){
-    n=cont;
-    dec=cont/10; //15/10-> 1.5 >1  // 5/10 -> 0.5 -> 0
-    uni=cont-(dec*10);// 15-10=5 // 5-0=5
-  
     
-    
-  }
+    dec=conta/10; //15/10-> 1.5 >1  // 5/10 -> 0.5 -> 0
+    uni=conta-(dec*10);
+  }// 15-10=5 // 5-0=5  
 digitalWrite(decenas,HIGH);
 digitalWrite(unidades,LOW);
 //imprimir valor de decenas
@@ -48,9 +45,11 @@ digitalWrite(unidades,HIGH);
 //imprimir valor de unidades
 segmentos(uni);
 delay(100);
-
+ 
 }
-} 
+}
+}
+
  
 void segmentos (int i){
   switch(i){
