@@ -1,0 +1,166 @@
+#include <Wire.h>
+#include<LiquidCrystal.h> 
+LiquidCrystal lcd(12, 11,7,6,5,4);
+int i;
+String data;
+String dato;
+char num;
+void setup() {
+  lcd.begin(16,2);
+  Wire.begin(4);
+  Wire.onReceive(receiveEvent); //Evento de recepcion de mesajes
+  lcd.setCursor(0,0);
+  Serial.begin(9600);// Inicio de cx serial
+}
+void loop() {
+}
+void receiveEvent(int bytes){
+  while(Wire.available()){
+    if(Serial.available()){
+      data = Serial.readString();
+      //lcd.clear();
+      //lcd.print(data);   
+  }
+      char imp=Wire.read();
+      dato=dato+imp;
+      //lcd.print(dato);
+      String a1="";
+      for(i=0;i<=dato.length();i++){
+      switch(dato[i]){
+        case 'a':
+         a1=a1+"01";
+          //Serial.print(a1);
+          //lcd.setCursor(0,2);
+          //lcd.print(a);
+        break;
+        case 'b':
+          a1=a1+"1000";
+        break;
+        case 'c':
+          a1=a1+"1010";
+        break;
+        case 'd':
+          a1=a1+"100";
+        break;
+        case 'e':
+          a1=a1+"0";
+        break;
+        case 'f':
+          a1=a1+"0010";
+        break;
+        case 'g':
+          a1=a1+"110";
+        break;
+        case 'h':
+          a1=a1+"0000";
+        break;
+        case 'i':
+          a1=a1+"00";
+        break;
+        case 'j':
+          a1=a1+"0111";
+        break;
+        case 'k':
+          a1=a1+"101";
+        break;
+        case 'l':
+          a1=a1+"0100";
+        break;
+        case 'm':
+          a1=a1+"11";
+        break;
+        case 'n':
+          a1=a1+"10";
+        break;
+        case 'o':
+          a1=a1+"111";
+        break;
+        case 'p':
+          a1=a1+"0110";
+        break;
+        case 'q':
+          a1=a1+"1101";
+        break;
+        case 'r':
+          a1=a1+"010";
+        break;
+        case 's':
+          a1=a1+"000";
+        break;
+        case 't':
+          a1=a1+"1";
+        break;
+        case 'u':
+          a1=a1+"001";
+        break;
+        case 'v':
+          a1=a1+"0001";
+        break;
+        case 'w':
+          a1=a1+"011";
+        break;
+        case 'x':
+          a1=a1+"1001";
+        break;
+        case 'y':
+          a1=a1+"1011";
+        break;
+        case 'z':
+          a1=a1+"1100";
+        break;
+        case '1':
+          a1=a1+"01111";
+        break;
+        case '2':
+          a1=a1+"00111";
+        break;
+        case '3':
+          a1=a1+"00011";
+        break;
+        case '4':
+          a1=a1+"00001";
+        break;
+        case '5':
+          a1=a1+"00000";
+        break;
+        case '6':
+          a1=a1+"10000";
+        break;
+        case '7':
+          a1=a1+"11000";
+        break;
+        case '8':
+          a1=a1+"11100";
+        break;
+        case '9':
+          a1=a1+"11110";
+        break;
+        case '0':
+          a1=a1+"11111";
+        break;
+        case '_':
+          a1=a1+"001101";
+        break;
+        case '(':
+          a1=a1+"10110";
+        break;
+        case ')':
+          a1=a1+"101101";
+        break;
+        case '@':
+          a1=a1+"011010";
+        break;
+        case '!':
+          a1=a1+"101011";
+        break;
+        default:
+        break;
+      }
+      }
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print(dato);
+      lcd.setCursor(0,1);
+      lcd.println(a1);
+  }
+}
