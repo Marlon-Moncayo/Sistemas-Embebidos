@@ -1,0 +1,26 @@
+String info; //variable de recepción de datos de tipo string
+const int ledVerde=8; //
+const int ledRojo=9;
+void setup(){
+  Serial.begin(9600);
+  Serial.println("La contraseña es 1UTN ");
+  Serial.println("Ingrese la contrasena: ");
+  pinMode(ledVerde,OUTPUT);
+  pinMode(ledRojo,OUTPUT);
+} 
+
+void loop(){
+if(Serial.available()>0){ // Revisa si existen datos a ser leídos
+  info=Serial.readString();// Lee y guarda la informacion ingresada
+    if( info== "1UTN"){ // Condicion de comparacion 
+       Serial.println("Contraseña Correcta..!");
+       digitalWrite(ledVerde,HIGH);
+       digitalWrite(ledRojo,LOW);
+     }
+     else{
+         Serial.println("Contraseña Incorrecta.!");
+         digitalWrite(ledVerde,LOW);
+         digitalWrite(ledRojo,HIGH);
+  }  
+}
+}
