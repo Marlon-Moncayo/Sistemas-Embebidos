@@ -16,11 +16,13 @@ if(Serial.available()>0){ // Revisa si existen datos a ser leídos
        Serial.println("Contraseña Correcta..!");
        digitalWrite(ledVerde,HIGH);
        digitalWrite(ledRojo,LOW);
+       Serial.println("LED VERDE se ha encendido..");
      }
      else{
          Serial.println("Contraseña Incorrecta.!");
          digitalWrite(ledVerde,LOW);
          digitalWrite(ledRojo,HIGH);
+         Serial.println("LED ROJO se ha encendido..");
   }  
 }
 }
