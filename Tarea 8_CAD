@@ -1,0 +1,63 @@
+#include<LiquidCrystal.h>
+LiquidCrystal lcd{13,12,11,10,9,8};// Pines de la pnatalla LCD
+const int motor=5; // declaracion al pot 5
+int velocidad=0; // variable que tomara velocidad
+int velocidad2=0;
+float voltaje=0; // variable que tomara voltaje
+int vmax=0;
+int vmin=0;
+String dato;
+int var;
+float pot=0;
+float pot1;
+String dato2;
+
+void setup(){
+  Serial.begin(9600);// Inicializacion de la comunicacion Serial
+  Serial.println("Ingrese valores del 0 al 1023: ");
+  Serial.println("Ingrese velocidad minima: ");
+  lcd.begin(16,2);
+  pinMode(motor,OUTPUT);
+}
+
+void loop(){
+  lcd.setCursor(0,0);
+     lcd.print("Velocidad: ");
+     if(Serial.available()>0){        // condición de 
+     dato=Serial.readString();    // almacenamiento de dato ingresado en variable
+     velocidad=dato.toInt();           // conversión a entero
+     Serial.println("Dato Ingresado: ");
+     delay(500);
+     Serial.println("Ingrese velocidad maxima: ");
+     delay(500);
+    }
+      pot=analogRead(0); // lee la variacion que realiza el potenciometro
+      if(velocidad<1024){
+        if(Serial.available()>0){
+          dato2=Serial.readString();
+          velocidad2=dato2.toInt();
+          Serial.println("Dato Ingresado: ");
+          delay(500);  
+    }   
+        vmin=((float)velocidad)/4;
+        vmax=((float)velocidad2)/4;
+        pot1=map(pot, 0, 1023, vmin, vmax);
+        voltaje=(pot1*5.0)/255;          
+        analogWrite(motor,pot1);
+        lcd.setCursor(11,0);
+        lcd.print(pot1);
+        lcd.setCursor(0,1);
+        lcd.println("voltaje:");
+        lcd.setCursor(9,1);
+        lcd.println(voltaje);
+        delay(20);
+      }
+     else{
+   lcd.clear();
+   lcd.setCursor(0,0);
+   lcd.println("Dato Invalido"); // mensaje de error en LCD.
+   Serial.println("Dato Inválido");   // mensaje de error
+   delay(1000); // espera de estabilización
+     }
+  
+}
