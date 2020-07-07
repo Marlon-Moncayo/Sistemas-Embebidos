@@ -42,14 +42,21 @@ void loop(){
         vmin=((float)velocidad)/4;
         vmax=((float)velocidad2)/4;
         pot1=map(pot, 0, 1023, vmin, vmax);
-        voltaje=(pot1*5.0)/255;          
+        voltaje=(pot1*5.0)/255; 
+        var=((pot1*100)/255);         
         analogWrite(motor,pot1);
         lcd.setCursor(11,0);
-        lcd.print(pot1);
+        lcd.print(var);
+        lcd.setCursor(15,0);
+        lcd.print("%");
         lcd.setCursor(0,1);
-        lcd.println("voltaje:");
-        lcd.setCursor(9,1);
+        lcd.println("vol:");
+        lcd.setCursor(5,1);
         lcd.println(voltaje);
+        lcd.setCursor(9,1);
+        lcd.println("PMW:");
+        lcd.setCursor(12,1);
+        lcd.println(pot1);
         delay(20);
       }
      else{
