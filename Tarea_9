@@ -1,0 +1,77 @@
+/*
+ * Tarea 9: Sumador y restador
+ * Marlon Moncayo
+ * Sistemas Embebidos
+ * 
+ * El pulsar el primer logic estate es para ingreso de los numeros en este caso acepta solo dos numeros  y al presionar el otro logic state realiza las operaciones
+ * de suma y resta.
+ */
+volatile int state;
+String dato;
+int num;
+String dato2;
+String dato3;
+String dato4;
+int num2;
+int num3;
+int num4;
+int suma;
+int resta;
+int on=0;
+int op=0;
+
+void setup() {
+  Serial.begin(9600);// activacion de cx serial
+  attachInterrupt(0,serialEvent,LOW);
+  attachInterrupt(1,operar,LOW);
+}
+
+void loop() {
+  //digitalWrite(led, state = !state);
+  //delay(tiempo);
+}
+
+void serialEvent(){
+  switch(on){
+    case 0:
+      Serial.println("Inicio del Sistema");
+      Serial.println("Para cada ingreso Preione el boton");
+      Serial.println("Ingrese el primer valor");
+      on++;
+     break;
+     case 1:
+     if(Serial.available()>0){
+      dato=Serial.readString();
+      num=dato.toInt();
+     }
+      Serial.println("Dato Ingresado..!");
+      Serial.println("Ingrese el segundo valor");
+     on++;
+    break;
+    case 2:
+    if(Serial.available()>0){
+      dato2=Serial.readString();
+      num2=dato2.toInt();
+     }
+    Serial.println("Dato Ingresado..!");
+    Serial.println("Presione el otro boton");
+     on=0;
+     break;
+  
+  }
+}
+void operar() {
+  switch(op){
+    case 0:
+    suma=num+num2;
+    resta=num-num2;
+      Serial.println("La suma es:"+String(suma));
+      Serial.println("La resta es:"+String(resta));
+      op++;
+    break;
+    case 1:
+     Serial.println("Fin del Proceso..!");
+     op=0;
+    break;
+  }
+}
