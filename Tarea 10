@@ -1,0 +1,188 @@
+/*
+ * Tarea N 10-11: Alarma de Reloj
+ * Marlon Moncayo
+ * Sistemas Embebidos
+ * 
+ * El sistema cuenta con potenciometros que hacen la funcion de CAD para cambiar la hora de reloj y establecer
+ * la hora de Alarma, para ingresar la alarma se debe pulsar el pulsador o logic estate cuando la alarma se encuentre solo con horas y minutos es  
+ * para ingresar y al presionar de nuevo el logic state la alarma se activa y esta en su modo de horas, minutos y segundos.
+ * cuando el sistema detecte que la hora de reloj es igual a la que se programo en la alarma
+ * suena un buzzer y se enciende un led que actuan que la alarma a sonado y tendra una duracion de un minuto.
+ */
+
+
+#include<TimerOne.h> // libreria del timer 1 se usara para el reloj
+#include<LiquidCrystal.h> // Libreria de la lcd
+#include<MsTimer2.h>
+
+LiquidCrystal lcd{13,12,11,10,9,8}; // pines de la LCD para su uso
+int horas=0; // variable horas del reloj
+int minutos=0;// variable minutos del reloj
+const int speaker=5;
+const int led=7;
+volatile long int segundos=0;
+int seg=0;// variable segundos de la alarma
+int h=0;// variable horas de la alarma
+int m=0;// variable minutos de la alarma
+int estado1=0;// estado del reloj
+int estado2=0;// estado de configuracion del reloj
+int conversor;
+int conversor2;
+int conversor3;
+int conversor4;
+int horero;// conversor CAD del horero
+int minutero;// conversor CAD del minutero
+int hor;
+int minu;
+float val;
+int val2;
+void setup() {
+ lcd.begin(16,2);
+ pinMode(speaker,OUTPUT);
+ pinMode(led,OUTPUT);
+ Timer1.initialize(1000000); //1 seg
+ Timer1.attachInterrupt(tiempo); //
+ attachInterrupt(0, cambiar, LOW);
+ attachInterrupt(1, alarma, LOW);
+ //MsTimer2::set(1000,alarma);
+ //MsTimer2::start();
+}
+
+void loop() {
+  if(estado2==0 && estado1==0){
+  if(horas==h && minutos==m){
+    analogWrite(speaker,150);
+    digitalWrite(led,HIGH);
+    
+  }
+  if(horas!=h || minutos!=m){
+    analogWrite(speaker,0);
+    digitalWrite(led,LOW);
+  }
+  }
+
+}
+void tiempo(){
+  segundos++;
+  if(segundos>59){
+    segundos=0;
+    minutos++;  
+  }
+  if(minutos>59){
+    minutos=0;
+    horas++;
+  }
+  if(horas==24){
+    horas=0;
+  }
+if(estado2==0){
+lcd.setCursor(0,0);
+lcd.print("Hora: ");
+lcd.setCursor(5,0);
+if (horas<10) 
+lcd.print("0");
+lcd.print(horas);
+lcd.setCursor(7,0);
+lcd.print(":");
+lcd.setCursor(8,0);
+if (minutos<10) 
+lcd.print("0");
+lcd.print(minutos);
+lcd.setCursor(10,0);
+lcd.print(":");
+lcd.setCursor(11,0);
+if (segundos<10) 
+lcd.print("0");
+lcd.print(segundos);
+if(horas>12){
+  lcd.setCursor(14,0);
+  lcd.print("PM");
+}else{
+lcd.setCursor(14,0);
+lcd.print("AM");
+}
+}else if(estado2==1){
+    lcd.clear();
+    conversor=analogRead(0);
+    conversor2=analogRead(1);
+    lcd.setCursor(0,0);
+    lcd.print("Hora:");
+    lcd.setCursor(7,0);
+    horero=map(conversor, 0, 1023, 0, 24);
+    horas=horero;
+    lcd.println(horas);
+    lcd.setCursor(9,0);
+    lcd.println(":");
+    minutero=map(conversor2, 0, 1023, 0,60);
+    lcd.setCursor(10,0);
+    minutos=minutero;
+    lcd.println(minutos); 
+}
+}
+
+void alarma(){
+  switch(estado1){
+    case 0:
+      lcd.setCursor(0,1);
+      lcd.print("Alarm: ");
+      lcd.setCursor(5,1);
+      if (h<10) 
+      lcd.print("0");
+      lcd.print(h);
+      lcd.setCursor(7,1);
+      lcd.print(":");
+      lcd.setCursor(8,1);
+      if (m<10) 
+      lcd.print("0");
+      lcd.print(m);
+      lcd.setCursor(10,1);
+      lcd.print(":");
+      lcd.setCursor(11,1);
+      if (seg<10) 
+      lcd.print("0");
+      lcd.print("0");
+      if(horas>12){
+        lcd.setCursor(14,1);
+        lcd.print("PM");
+      }else{
+      lcd.setCursor(14,1);
+      lcd.print("AM");
+      estado1++;
+     break;
+     case 1:
+      lcd.clear();
+      conversor3=analogRead(2);
+      conversor4=analogRead(3);
+      lcd.setCursor(0,1);
+      lcd.print("Alarm:");
+      lcd.setCursor(7,1);
+      hor=map(conversor3, 0, 1023, 0, 24);
+      h=hor;
+      lcd.println(h);
+      lcd.setCursor(9,1);
+      lcd.println(":");
+      minu=map(conversor4, 0, 1023, 0,60);
+      lcd.setCursor(10,1);
+      m=minu;
+      lcd.println(m);
+      estado1=0;
+     break;
+    }
+  }
+}
+
+void cambiar(){
+  switch(estado2){
+    case 0:
+      estado2++;
+     break;
+     case 1:
+      estado2=0;
+    break; 
+  }
+  conversor=analogRead(0);
+  horero=horas;
+  horero=map(conversor, 0, 1023, 0, 24);
+  lcd.setCursor(7,0);
+  lcd.println(horero);
+}
