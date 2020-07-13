@@ -1,0 +1,47 @@
+/*SISTEMAS EMBEBIDOS
+ * 
+ * MARLON MONCAYO
+ * 
+ * TAREA 12: Reinicio del sistema cada 28 segundos.
+ */
+
+#include <avr/wdt.h>
+#include<TimerOne.h>
+#include <EEPROM.h>
+#include <LiquidCrystal.h>
+LiquidCrystal lcd (13, 12, 11, 10, 9, 8);
+int rom = 0;
+int tiempo = 0;
+void setup(){
+  lcd.begin(16,2); // iniciar la LCD
+  lcd.print("Inicio Sistema");
+  Serial.begin(9600); // iniciar la comunicacion serial a 9600 baudios
+  Serial.println("INICIO DE SISTEMA");
+  Timer1.initialize(1000000);// inicializar timer1 a 1 segundo
+  Timer1.attachInterrupt(reinicio);// interrupcion del timer 1
+  rom = EEPROM.read(0);
+  
+}
+void loop() {
+  if (rom < 255) { // condicion que room no debe ser mayor a 255
+    EEPROM.write(0, rom);// guardar en la EEPROM  
+    Serial.println(rom++);// imprimir dato de la EEPROM
+  }
+  else {
+    rom = 0; //reinicio de la EEPROM cada 255
+  }
+  delay(1000); // esperar 1 segundo
+}
+
+void reinicio() {
+  tiempo++;  // variable creciente a 1 segundo
+  lcd.setCursor(0,1);// seccion inferior de la LCD
+  lcd.print(tiempo); // impresion del tiempo
+  if (tiempo==26){
+  lcd.clear();// borrar datos de la lcd
+  lcd.setCursor(0,0);// seccion superior de la LCD
+  lcd.println("REINICIO EN 2S");// imprimir reinicio
+  wdt_disable();// WDT inhabilitado
+  wdt_enable(WDTO_2S); //reiniciar en 2 segundos
+  }
+}
