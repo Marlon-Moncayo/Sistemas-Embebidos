@@ -1,0 +1,178 @@
+#include<avr/power.h>
+#include<avr/sleep.h>
+#include<avr/wdt.h>
+#include<LiquidCrystal.h> 
+#include<TimerOne.h>
+#include<MsTimer2.h>
+#include<EEPROM.h> 
+
+LiquidCrystal lcd(13, 12, 11, 10, 9, 8); 
+int segundos;
+int minutos;
+volatile int tiempo;
+float modulo;
+int i=0;
+int aleatorio;
+int aleatorio2;
+String info;
+int rom=0;
+int valor=0;
+int valor2=0;
+int valor3=0;
+const int luz1=5;
+const int luz2=6;
+const int luz3=7;
+const int sensorIR=4;
+const int sensorPIR=3;
+const int sensorGAS=2;
+int sleepStatus=0;
+int reverse=20;
+
+
+void setup(){
+ 
+  Serial.begin(9600);
+  lcd.begin(16,2);
+  pinMode(luz1,OUTPUT);
+  pinMode(luz2,OUTPUT);
+  pinMode(luz3,OUTPUT);
+  pinMode(sensorIR , INPUT);
+  pinMode(sensorPIR , INPUT);
+  pinMode(sensorGAS , INPUT);
+  Serial.println("Inicio del Sistema");
+  Serial.println("Introduzca la contrasena: ");
+  minutos=EEPROM.read(0);
+  segundos=EEPROM.read(1);
+  Timer1.initialize(1000000);
+  Timer1.attachInterrupt(iniciar);
+  MsTimer2::set(1000,contador);
+  MsTimer2::start();
+  EEPROM.write(0,rom);
+  set_sleep_mode(SLEEP_MODE_IDLE);
+  power_adc_disable();
+  power_spi_disable();
+  power_timer0_disable();
+  power_timer1_disable();
+  power_timer2_disable();
+  power_twi_disable();  
+}
+
+void loop() {  
+}
+
+void serialEvent(){
+  sleep_mode();
+  //lcd.noDisplay();
+  if(Serial.available()>0){ 
+  info=Serial.readString();
+  Serial.println("  Dato Ingresado: ");
+  if( info=="1UTN"){ 
+    Serial.println("Contrasena Correcta...!");
+    Serial.println("Activacion en 20 segs..");
+    delay(20000);
+      sleep_disable();
+      power_all_enable();
+      //lcd.display();
+
+      do{
+      aleatorio = random(0, 3); // Aleatoriamente escogemos que pin se va a encender...
+      switch(aleatorio) {
+        case 0:
+        digitalWrite(luz1,HIGH);
+        delay(500);
+        digitalWrite(luz1,LOW);
+        break;
+        case 1:
+        digitalWrite(luz2,HIGH);
+        delay(500);
+        digitalWrite(luz2,LOW);
+        break;
+        case 2:
+        digitalWrite(luz3,HIGH);
+        delay(500);
+        digitalWrite(luz3,LOW);
+        aleatorio=0;
+        break;
+      }
+    }while(tiempo>0); 
+
+  }else{
+  Serial.println("Contrasena INCORRECTA...!");
+  }
+  
+  }
+}
+
+void iniciar(){
+ if(info=="1UTN"){
+  tiempo++;
+  int a=reverse-tiempo;
+  if(tiempo<=20)
+  Serial.println(String("Inicio en: ")+String(a));
+  if(tiempo>=20){
+   valor = digitalRead(sensorIR );
+   valor2 = digitalRead(sensorPIR );
+   valor3 = digitalRead(sensorGAS );
+   if (valor == HIGH) {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Intruso Detectado");
+       delay(20);
+  }
+
+  
+  if(valor2==HIGH){
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Movimiento Detectado");
+    delay(20);
+
+  }
+
+   if(valor3==HIGH){
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("GAS Detectado");
+    delay(20);
+  }
+ }
+  
+ }
+} 
+
+void contador(){
+ if(info=="1UTN"){
+  if(tiempo>=20){
+   if(segundos<60){ // condición de seg
+     segundos++; // incrementa variable
+    }
+   else{
+      segundos=0;
+      if(minutos<24){ // condición de min
+         minutos++; // incrementa variable
+        }
+       else{
+        minutos=0;
+        } 
+    }
+modulo = tiempo % 55;
+if(modulo==0){
+  EEPROM.write(0,minutos); 
+  EEPROM.write(1,segundos);
+}
+lcd.setCursor(0,1);
+lcd.print("Hora: ");
+lcd.setCursor(5,1);
+if (minutos<10) 
+lcd.print("0");
+lcd.print(minutos);
+lcd.setCursor(7,1);
+lcd.print(":");
+lcd.setCursor(8,1);
+if (segundos<10) 
+lcd.print("0");
+lcd.print(segundos);
+Serial.println(String(EEPROM.read(0))+String(":")+String(EEPROM.read(1)));
+  }
+}
+}
