@@ -1,0 +1,268 @@
+import ddf.minim.*;//Libreria para sonidos
+Minim gestor;//Inicializar como objeto
+AudioPlayer caminar;
+AudioSample monedita;
+AudioPlayer muerte;//SONIDO DE FONDO, DURANTE TODO  EL JUEGO
+PImage jugador,enemigo,perdio,fuegonuevo,utn;
+PImage fondo,fuego1,moneda;
+int vector2[]={-20,120,269,340,470,590,710,890};
+int vector1[]={-50,100,250,400,550,700,900};
+int vectorx[]={200,250,275,310,390,450,500};
+int frente=2;
+int x=350,y=800;
+float rt;
+int r=0;
+int s=0;
+int p=0;
+int v=0;
+int das=0;
+int count=0;
+int coin=0;
+int proceso1(){
+ return int(random(175,315));
+}
+int proceso2(){
+ return int(random(385,525));
+}
+int movy(){
+ return int(random(-60,-59));
+}
+int regresar(){
+  return int(random(2));
+}
+
+float rutay[]={-59,-200,-350,-600};
+float rutayr[]={-59,-200,-350,-600};
+int rutax[]={proceso1(),proceso1(),proceso2(),proceso2()};
+int rutax1[]={proceso1(),proceso1(),proceso2(),proceso2()};
+
+int puntuacion;
+int llave=0;
+int limite =regresar();
+float m=5;
+float d=m;
+float n=0.001;
+int posicionicion=0;
+
+void setup(){
+size(800,900);
+ 
+  textAlign(CENTER, CENTER);
+  jugador=loadImage("fuego1.png");
+  perdio=loadImage("perdio.PNG");
+  enemigo=loadImage("hielo.png");
+  moneda=loadImage("moneda.png");
+  fuegonuevo=loadImage("newfuego.PNG");
+  utn=loadImage("utn.PNG");
+  gestor = new Minim(this);
+  caminar = gestor.loadFile("castillo.mp3");
+  monedita=gestor.loadSample("cae.mp3");
+  muerte=gestor.loadFile("morir.wav");
+  for(int i=0;i<=3;i++){
+  rutay[i]=movy();
+  rutax[i]=p;
+  }
+}
+void draw(){
+  background(255);
+  image(utn,400,260);
+  image(fuegonuevo,400,600);
+  if(llave==1){
+    d=0;
+    n=0;
+    frente=0;
+  }
+  if(llave==0){
+    d=m;
+    n=.001;
+    frente=2;
+  }
+
+  imageMode(CENTER); 
+  if(r==0){
+  fill(200,0,0);
+  textSize(30);
+  text("Presione la A para comenzar",width/2,TOP);
+  fill(0,0,250);
+  textSize(20);
+  text("El presente juego consiste en esquivar los obstaculos",width/2,400);
+  text("y que el jugador recoja la mayor cantidad de valor en monedas",width/2,440);
+  }
+  
+  if(r==1){
+    Perdedor();
+  }
+  if(r==2){
+  rectMode(CENTER);
+  fill(224, 255, 255);
+  noStroke();
+  rect(350,450,400,900);
+
+  for(int i=0;i<=6;i++){
+     fill(255);
+     noStroke();
+     ellipse(200,vector1[i],100,30);
+
+  }
+  for(int v=0;v<=7;v++){
+     fill(255);
+     noStroke();
+     ellipse(500,vector2[v],100,30);
+
+  }
+  for(int i=0;i<=6;i++){
+     vector1[i]+=frente;
+     if(vector1[i]>=950){
+       vector1[i]=-50;
+     }
+  }
+  for(int v=0;v<=6;v++){
+     vector2[v]+=frente;
+     if(vector2[v]>=890){
+       vector2[v]=-20;
+     }
+  }
+  for(int das=0;das<=6;das++){
+     vectorx[das]+=frente;
+     if(vectorx[das]>=500){
+       vectorx[das]=200;
+     }
+  }
+  
+ 
+  image(moneda,vectorx[das],vector2[v]);
+  
+  image(jugador,x,y);
+  for(int i=0;i<=3;i++){
+  image(enemigo,rutax[i],rutay[i]);
+  }
+  fill(0);
+  textSize(30);
+  text("Monedas: ",690,300);
+  textSize(40);
+  text(coin,720,400);
+  fill(0);
+  textSize(30);
+  text("Puntuación: ",690,120);
+  textSize(40);
+  text(puntuacion,720,200);
+  m+=n;
+  for(int i=0;i<=3;i++){
+  rutay[i]+=d;
+   }
+  for(int i=0;i<=3;i++){
+  if(rutay[i]>=959){
+    puntuacion+=5;
+  rutay[i]=movy();
+  limite=regresar();
+  if(limite==0){
+  rutax[i]=proceso1();
+   }
+  if(limite==1){
+  rutax[i]=proceso2();
+     }
+    }
+  }
+  if(x>=521){
+  x=521;
+   }
+  else if(x<=179){
+  x=179;
+   }
+  if(y>=840){
+  y=840;
+   }
+  else if(y<=60){
+  y=60;
+   }
+  for(int i=0;i<=3;i++){
+    if(rutay[i]>=(y-117) && rutay[i]<=(y+117) && rutax[i]>=(x-46) && rutax[i]<=(x+46)){
+     Perdedor();
+    }
+} 
+    if(vector2[v]>=(y-117) && vector2[v]<=(y+117) && vectorx[das]>=(x-46) && vectorx[das]<=(x+46)){ 
+      monedas();
+      
+    }
+
+  }
+}
+
+void keyPressed(){
+  if(keyCode == 32){
+     llave=1;
+  }
+  if(s==0){ 
+
+  }  
+if(keyCode==RIGHT){
+x+=d++;
+}
+else if(keyCode==LEFT){
+x-=d++;
+}
+else if(keyCode==UP){
+y-=d++;
+}
+else if(keyCode==DOWN){
+y+=d++;
+}
+if(key=='A'){
+
+caminar.loop();
+r=2;
+puntuacion=0;
+reset();
+m=5;d=m;
+s=0;
+}
+}
+void keyReleased(){
+  llave=0;
+if(s==0){ 
+}
+  
+}
+void mousePressed(){println(mouseY);}
+void Perdedor(){
+
+ r=1;
+ 
+fill(0);
+if(puntuacion>=0){
+  background(240);
+  caminar.pause();
+  muerte.play();
+  image(perdio,350,480);
+  textSize(25);
+  fill(250,0,0);
+  text("Puntuacion Obtenida :",350,100);
+  text(puntuacion,350,150);
+  fill(10,100,200);
+  text("Monedas Obtenidas :",350,200);
+  text(count,350,250);
+  textSize(20);
+  text("Presione A para reiniciar",350,300);
+  textSize(30);
+  text("Te has congelado",360,650);
+}
+
+s++;
+reset();
+}
+void monedas(){
+  count=count+1;
+  coin=count;
+  monedita.trigger();
+}
+void reset(){
+  
+coin=0;
+x=350;
+y=800;
+d=5;
+for(int i=0;i<=3;i++){
+rutax[i]=rutax1[i];
+rutay[i]=rutayr[i];
+}
+}
