@@ -1,0 +1,334 @@
+#include "datos.h"
+float prueba[8][3]{
+{16368,8780,964},
+{16368,10128,0},
+{7964,0,11140},
+{6272,2260,10464},
+{7824,29096,6104},
+{7824,27828,6104},
+{3004,11564,20848},
+{0,13176,19264}
+};
+int k;
+byte f;
+byte c;
+int b=1;
+float por=0;
+int distancia_menor=1000;
+int etiqueta;
+float orden;
+float orden_vec[157];
+float distancia_vecin;
+int newmatriz[157][4];
+float val[157];
+float val1[40];
+float bal1[40];
+float bal2[39];
+float bal3[39];
+float bal4[39];
+float val2[39];
+float val3[39];
+float val4[39];
+float max1;
+float max2;
+float max3;
+float max4;
+float suma=0;
+float suma2=0;
+float suma3=0;
+float distancia1[40];
+float distancia2[39];
+float distancia3[39];
+float distancia4[39];
+float dis1[40];
+float dis2[39];
+float dis3[39];
+float dis4[39];
+float suma4=0;
+float suma5=0;
+float suma6=0;
+float suma7=0;
+float suma8=0;
+float suma9=0;
+float suma10=0;
+float suma11=0;
+float suma12=0;
+float promedio;
+float promedio2;
+float promedio3;
+float promedio4;
+float promedio5;
+float promedio6;
+float promedio7;
+float promedio8;
+float promedio9;
+float promedio10;
+float promedio11;
+float promedio12;
+String dato;
+void setup() {
+  Serial.begin(9600);
+  event();
+}
+void event(){
+  suma=0;
+//============PROMEDIO POR CADA ETIQUETA=============//  
+//============ ETIQUETA 1=============
+  for(f=0;f<=157;f++){
+     if(matriz[f][3]==1){
+     suma+=matriz[f][0]; 
+     promedio=suma/(f+1);   
+     //Serial.println(matriz[f][0]);
+     suma2+=matriz[f][1];
+     promedio2=suma2/(f+1);
+     //
+     suma3+=matriz[f][2];
+     promedio3=suma3/(f+1);
+  }
+   
+ //============ ETIQUETA 2 ============= 
+  if(matriz[f][3]==2){
+     suma4+=matriz[f][0];
+     promedio4=(suma4*2)/(f); 
+     //Serial.println(matriz[f][0]);
+     suma5+=matriz[f][1];
+     promedio5=(suma5*2)/(f);
+     //
+     suma6+=matriz[f][2];
+     promedio6=(suma6*2)/(f); 
+   }
+//============ ETIQUETA 3 ============= 
+    if(matriz[f][3]==3){
+     suma7=suma7+matriz[f][0];
+     promedio7=(suma7*3)/f; 
+     //Serial.println(matriz[f][0]);
+     suma8+=matriz[f][1];
+     promedio8=(suma8*3)/f;
+     //
+     suma9+=matriz[f][2];
+     promedio9=(suma9*3)/f; 
+  }
+  //============ ETIQUETA 4 ============= 
+     if(matriz[f][3]==4){
+     suma10=suma10+matriz[f][0];
+     promedio10=(suma10*4)/f; 
+     //Serial.println(matriz[f][0]);
+     suma11+=matriz[f][1];
+     promedio11=(suma11*4)/f;
+     //
+     suma12+=matriz[f][2];
+     promedio12=(suma12*4)/f;
+   }
+ }
+ //========DISTANCIAS ETIQUETA 1
+ 
+ max1=distancia1[0];
+ max2=distancia2[0];
+ max3=distancia3[0];
+ max4=distancia4[0];
+ for(f=0;f<157;f++){
+  if(matriz[f][3]==1){
+  distancia1[f]=sqrt(pow(matriz[f][0]-promedio,2)+pow(matriz[f][1]-promedio2,2)+pow(matriz[f][2]-promedio3,2));
+  
+  //Serial.println(dis1[f]);
+    //===VALOR MAXIMO 1
+     if(distancia1[f]>max1){
+      max1=distancia1[f];
+     }
+  }
+  //========DISTANCIAS ETIQUETA 2 
+   if(matriz[f][3]==2){
+   distancia2[f]=sqrt(pow(matriz[f][0]-promedio4,2)+pow(matriz[f][1]-promedio5,2)+pow(matriz[f][2]-promedio6,2));
+   
+   //Serial.println(dis2[f]); 
+   //===VALOR MAXIMO 2
+  if(distancia2[f]>max2){
+      max2=distancia2[f];
+     }
+   
+   }
+    //========DISTANCIAS ETIQUETA 3
+   if(matriz[f][3]==3){
+    distancia3[f]=sqrt(pow(matriz[f][0]- promedio7,2)+pow(matriz[f][1]-promedio8,2)+pow(matriz[f][2]-promedio9,2));
+    
+   // Serial.println(distancia3);
+    //===VALOR MAXIMO 3
+   if(distancia3[f]>max3){
+      max3=distancia3[f];
+     }
+   }
+    //========DISTANCIAS ETIQUETA 4
+   if(matriz[f][3]==4){
+    distancia4[f]=sqrt(pow(matriz[f][0]-promedio10,2)+pow(matriz[f][1]-promedio11,2)+pow(matriz[f][2]- promedio12,2));
+    
+    //Serial.println(distancia4); 
+     //===VALOR MAXIMO 4
+  if(distancia4[f]>max4){
+      max4=distancia4[f];
+     }
+   }
+   //Serial.println(max1);
+  // Serial.println(dis2[f]);
+   //Serial.println(dis3[f]);
+  //Serial.println(dis4[f]);
+   
+ }
+
+ //========VALORES ENTRE 0 Y 1:
+Serial.println("=======Distancias y Valores entre 0 y 1=======");
+
+for(f=0;f<157;f++){
+  if(matriz[f][3]==1){
+   dis1[f]=sqrt(pow(matriz[f][0]-promedio,2)+pow(matriz[f][1]-promedio2,2)+pow(matriz[f][2]-promedio3,2));
+   val1[f]=(dis1[f]/max1);
+   Serial.println(String(dis1[f])+String("      ")+String(val1[f]));
+   val[f]=val1[f];
+  }
+  if(matriz[f][3]==2){
+  dis2[f]=sqrt(pow(matriz[f][0]-promedio4,2)+pow(matriz[f][1]-promedio5,2)+pow(matriz[f][2]-promedio6,2));
+  val2[f]=(dis2[f]/max2);
+  val[f]=val2[f];
+  //Serial.println(val2[f]);
+  }
+  if(matriz[f][3]==3){
+  dis3[f]=sqrt(pow(matriz[f][0]- promedio7,2)+pow(matriz[f][1]-promedio8,2)+pow(matriz[f][2]-promedio9,2));
+  val3[f]=(dis3[f]/max3);
+  val[f]=val3[f];
+ //Serial.println(val3[f]);
+  }
+  if(matriz[f][3]==4){
+  dis4[f]=sqrt(pow(matriz[f][0]-promedio10,2)+pow(matriz[f][1]-promedio11,2)+pow(matriz[f][2]- promedio12,2));
+  val4[f]=(dis4[f]/max4);
+  val[f]=val4[f];
+  //Serial.println(val4[f]);
+  }
+}
+
+for(f=0;f<157;f++){
+ //Serial.println(val[f]);
+}
+for(f=0;f<175;f++){
+  if((val[f]>=0.4 && val[f]<=0.65)){
+    bal1[f]=matriz[f][0];
+    bal2[f]=matriz[f][1];
+    bal3[f]=matriz[f][2];
+    bal4[f]=matriz[f][3];
+  }else{
+     bal1[f]={0};
+     bal2[f]={0};
+     bal3[f]={0};
+     bal4[f]={0};
+  } 
+  if(bal1[f]>0){
+//Serial.println(String(bal1[f])+"    "+String(bal2[f])+String("   ")+String(bal3[f])+"   "+String(bal4[f])+"  "+String(f)); 
+  newmatriz[f][0]=bal1[f];
+  newmatriz[f][1]=bal2[f];
+  newmatriz[f][2]=bal3[f];
+  newmatriz[f][3]=bal4[f];
+  }
+}
+ Serial.println("PROMEDIOS ETIQUETA 1");
+ Serial.println(promedio);
+ Serial.println(promedio2);
+ Serial.println(promedio3);
+
+ Serial.println("PROMEDIOS ETIQUETA 2");
+ Serial.println(promedio4);
+ Serial.println(promedio5);
+ Serial.println(promedio6);
+ 
+ Serial.println("PROMEDIOS ETIQUETA 3");
+ Serial.println(promedio7);
+ Serial.println(promedio8);
+ Serial.println(promedio9);
+ Serial.println("PROMEDIOS ETIQUETA 4");
+ Serial.println(promedio10);
+ Serial.println(promedio11);
+ Serial.println(promedio12);
+
+
+ Serial.println("val max1 distancia etiqueta 1: "+String(max1));
+ Serial.println("val max2 distancia etiqueta 2: "+String(max2));
+ Serial.println("val max3 distancia etiqueta 3: "+String(max3));
+ Serial.println("val max4 distancia etiqueta 4: "+String(max4));
+
+ Serial.println(" ==== Nueva base de datos obtenida ==== ");
+for(f=0;f<175;f++){
+  if((val[f]>=0.4 && val[f]<=0.65)){
+    bal1[f]=matriz[f][0];
+    bal2[f]=matriz[f][1];
+    bal3[f]=matriz[f][2];
+    bal4[f]=matriz[f][3];
+  }else{
+     bal1[f]={0};
+     bal2[f]={0};
+     bal3[f]={0};
+     bal4[f]={0};
+  } 
+  if(bal1[f]>0){
+ Serial.println(String(bal1[f])+"    "+String(bal2[f])+String("   ")+String(bal3[f])+"   "+String(bal4[f])+"  "+String(f)); 
+  newmatriz[f][0]=bal1[f];
+  newmatriz[f][1]=bal2[f];
+  newmatriz[f][2]=bal3[f];
+  newmatriz[f][3]=bal4[f];
+  }
+}
+
+ ///=============================
+ ///    --   ALGORITMO KNN  --
+ //============================== 
+   
+     for(int a=0;a<8;a++){
+      for(f=0;f<157;f++){
+    
+      distancia_vecin=sqrt(distancia_vecin+pow(newmatriz[f][0]-prueba[a][0],2)+pow(newmatriz[f][1]-prueba[a][1],2)+pow(newmatriz[f][2]-prueba[a][2],2)+pow(newmatriz[f][3]-prueba[a][3],2));
+      orden_vec[f]=distancia_vecin;
+     }
+     //====== Ordenamiento
+    
+    for( f=0;f<157-1;f++){
+      if(orden_vec[f]>orden_vec[f+1]){
+        orden=orden_vec[f];
+        orden_vec[f]=orden_vec[f+1];
+        orden_vec[f+1]=orden;
+      }
+      //Serial.println("el orden: "+String(f)+String("   ")+String(orden_vec[f]));
+    }
+  Serial.println("el orden: "+String(f)+String("   ")+String(orden_vec[f]));
+    
+  
+    Serial.println(distancia_vecin);
+    if(distancia_menor>= distancia_vecin ||  distancia_vecin<max1){
+      etiqueta=1;
+    }
+    if(max1> distancia_vecin ||  distancia_vecin<max2){
+      etiqueta=2;
+    }
+    if(max2>= distancia_vecin ||  distancia_vecin<max3){
+      etiqueta=3;
+    }
+    if(max3>= distancia_vecin ||  distancia_vecin<max4){
+      etiqueta=3;
+     }
+ 
+ Serial.println("La etiqueta pertneciente es: "+String(etiqueta)); 
+ if(etiqueta==1 ||etiqueta==2 ||etiqueta==3 ){
+ Serial.println(String("datos ")+String(a)+String(" es: ")+String("Acierto"));
+ b++;
+ delay(100);
+}else{
+Serial.println(String("datos ")+String(a)+String(" es: ")+String("Error")); 
+b--;
+}
+  }
+ 
+ por=(b*100)/8;
+ Serial.print(String("Rendimiento del sistema: ")+String(por)+("%"));
+ Serial.println(" ");
+
+}  
+
+void loop() {
+ 
+}
+
